@@ -1,0 +1,107 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = `${site.nombre} — ${site.rol} | Sistemas a medida`,
+  description = 'Desarrollo sistemas a medida para municipios, clubes, institutos y profesionales: bolsa de empleo, gestión de socios, plataformas SaaS y sitios que traen clientes.',
+} = Astro.props;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const ogImage = `${siteUrl}/og-image.svg`;
+---
+
+<!doctype html>
+<html lang="es" class="scroll-smooth dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={site.nombre} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script is:inline>
+      try {
+        const saved = localStorage.getItem('theme');
+        // Premium oscuro por defecto, salvo que el usuario haya elegido claro
+        if (saved === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
+  </head>
+  <body class="bg-white text-slate-900 antialiased dark:bg-[#070b18] dark:text-slate-100">
+    <slot />
+    <script is:inline>
+      // Reveal on scroll
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((en) => {
+            if (en.isIntersecting) {
+              en.target.classList.add('visible');
+              io.unobserve(en.target);
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+      const bindReveals = () => document.querySelectorAll('.reveal:not(.visible)').forEach((el) => io.observe(el));
+      bindReveals();
+      // Fallback: si algo no intersecta en 2.5s, mostrar igual (evita contenido invisible)
+      setTimeout(() => document.querySelectorAll('.reveal:not(.visible)').forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight) el.classList.add('visible');
+      }), 2500);
+      // Count-up métricas
+      const cio = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((en) => {
+            if (!en.isIntersecting) return;
+            const el = en.target;
+            const target = Number(el.getAttribute('data-count') || '0');
+            const suffix = el.getAttribute('data-suffix') || '';
+            const dur = 1200;
+            const t0 = performance.now();
+            const step = (t) => {
+              const p = Math.min((t - t0) / dur, 1);
+              const eased = 1 - Math.pow(1 - p, 3);
+              el.textContent = Math.round(target * eased) + suffix;
+              if (p < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+            cio.unobserve(el);
+          });
+        },
+        { threshold: 0.5 }
+      );
+      document.querySelectorAll('[data-count]').forEach((el) => cio.observe(el));
+    </script>
+  </body>
+</html>
