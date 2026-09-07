@@ -1,0 +1,59 @@
+---
+import { clientes } from '../data/site';
+---
+
+<div class="mx-auto mt-10 max-w-5xl">
+  <p
+    class="text-center text-[12px] font-medium uppercase tracking-[0.5px] text-[#64748b]"
+  >
+    Confían en mi trabajo
+  </p>
+  <div
+    class="client-marquee mt-6 overflow-hidden"
+    role="region"
+    aria-label="Clientes que confían en mi trabajo"
+  >
+    <div class="client-track flex w-max items-center">
+      {
+        [0, 1].map((dup) => (
+          <div
+            class="flex items-center"
+            aria-hidden={dup === 1 ? 'true' : undefined}
+          >
+            {clientes.map((c) => (
+              <a
+                href={`/proyectos/${c.slug}`}
+                tabindex={dup === 1 ? -1 : undefined}
+                class="mx-6 shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#005bb5] sm:mx-8"
+              >
+                {c.chipOscuro ? (
+                  <span class="flex h-12 items-center rounded-full bg-[#0f172a] px-6 sm:h-14">
+                    <img
+                      src={c.logo}
+                      alt={c.nombre}
+                      loading="eager"
+                      decoding="async"
+                      class="h-6 w-auto sm:h-7"
+                    />
+                  </span>
+                ) : (
+                  <img
+                    src={c.logo}
+                    alt={c.nombre}
+                    loading="eager"
+                    decoding="async"
+                      class={
+                        c.alto
+                          ? 'h-14 w-auto opacity-70 grayscale transition duration-150 hover:opacity-100 hover:grayscale-0 sm:h-16'
+                          : 'h-10 w-auto opacity-70 grayscale transition duration-150 hover:opacity-100 hover:grayscale-0 sm:h-12'
+                      }
+                  />
+                )}
+              </a>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</div>

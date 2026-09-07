@@ -1,0 +1,160 @@
+---
+import { site } from '../data/site';
+
+const key = site.web3formsKey ?? '';
+---
+
+<form
+  id="contact-form"
+  class="flex flex-col gap-4"
+  data-web3forms-key={key}
+  data-whatsapp-numero={site.whatsappNumero}
+  novalidate={false}
+>
+  <div>
+    <label for="cf-nombre" class="field-label">Tu nombre</label>
+    <input
+      id="cf-nombre"
+      name="name"
+      type="text"
+      required
+      autocomplete="name"
+      placeholder="¿Cómo te llamás?"
+      class="field"
+    />
+  </div>
+
+  <div>
+    <label for="cf-contacto" class="field-label">Email o teléfono</label>
+    <input
+      id="cf-contacto"
+      name="contacto"
+      type="text"
+      required
+      autocomplete="email"
+      placeholder="¿Dónde te respondo?"
+      class="field"
+    />
+  </div>
+
+  <div>
+    <label for="cf-mensaje" class="field-label">Tu mensaje</label>
+    <textarea
+      id="cf-mensaje"
+      name="message"
+      required
+      rows="4"
+      placeholder="Contame qué proceso querés ordenar..."
+      class="field resize-y"
+    ></textarea>
+  </div>
+
+  <input
+    type="checkbox"
+    name="botcheck"
+    tabindex="-1"
+    autocomplete="off"
+    class="hidden"
+    aria-hidden="true"
+  />
+
+  <button type="submit" id="cf-submit" class="btn-primary w-full">
+    Enviar mensaje
+  </button>
+
+  <p
+    id="cf-estado"
+    role="status"
+    aria-live="polite"
+    class="hidden text-center text-[14px] leading-[1.5]"
+  ></p>
+</form>
+
+<script is:inline>
+  (function () {
+    var form = document.getElementById('contact-form');
+    if (!form) return;
+    var key = form.getAttribute('data-web3forms-key') || '';
+    var waNumero = form.getAttribute('data-whatsapp-numero') || '';
+    var submit = document.getElementById('cf-submit');
+    var estado = document.getElementById('cf-estado');
+
+    var mostrar = function (texto, ok) {
+      if (!estado) return;
+      estado.textContent = texto;
+      estado.classList.remove('hidden');
+      estado.style.color = ok ? '#16a34a' : '#334155';
+    };
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      var datos = new FormData(form);
+      var nombre = String(datos.get('name') || '').trim();
+      var contacto = String(datos.get('contacto') || '').trim();
+      var mensaje = String(datos.get('message') || '').trim();
+      var textoWA =
+        'Hola Laureano, soy ' +
+        nombre +
+        ' (' +
+        contacto +
+        '). ' +
+        mensaje;
+
+      // Sin key configurada: derivar a WhatsApp (nunca se rompe).
+      if (!key) {
+        window.open(
+          'https://wa.me/' + waNumero + '?text=' + encodeURIComponent(textoWA),
+          '_blank',
+          'noopener'
+        );
+        return;
+      }
+
+      if (submit) {
+        submit.disabled = true;
+        submit.textContent = 'Enviando…';
+      }
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: key,
+          subject: 'Nuevo mensaje desde el portfolio — ' + nombre,
+          from_name: nombre,
+          name: nombre,
+          contacto: contacto,
+          message: mensaje,
+          botcheck: datos.get('botcheck') || '',
+        }),
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (data && data.success) {
+            form.reset();
+            mostrar('Mensaje enviado. Te respondo en 24 hs.', true);
+          } else {
+            mostrar(
+              'No se pudo enviar. Escribime directo por WhatsApp.',
+              false
+            );
+          }
+        })
+        .catch(function () {
+          mostrar(
+            'No se pudo enviar. Escribime directo por WhatsApp.',
+            false
+          );
+        })
+        .finally(function () {
+          if (submit) {
+            submit.disabled = false;
+            submit.textContent = 'Enviar mensaje';
+          }
+        });
+    });
+  })();
+</script>

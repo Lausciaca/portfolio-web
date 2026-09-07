@@ -1,84 +1,104 @@
 export interface Proyecto {
-  id: string;
+  slug: string;
   titulo: string;
   cliente: string;
+  resumen: string;
+  stack: string[];
   problema: string;
   solucion: string;
-  resultado: string;
-  resultadoDestacado: string;
-  stack: string[];
-  imagen?: string;
-  /** cover = relleno total, contain = imagen completa (default) */
-  ajuste?: 'cover' | 'contain';
-  /** clase de aspecto del contenedor, ej: 'aspect-video' */
-  aspecto?: string;
+  impacto: string;
+  metrica: string;
 }
 
-// Orden: destacado con imagen primero, luego con imagen, luego solo texto.
 export const proyectos: Proyecto[] = [
   {
-    id: 'saas-agrimensores',
-    titulo: 'Sistema para Estudios de Agrimensura (SaaS)',
-    cliente: 'Estudios profesionales de agrimensura',
-    problema: 'Cada estudio guardaba planos y documentos en carpetas dispersas, difícil de compartir.',
-    solucion:
-      'Creé una plataforma online donde cada estudio tiene su espacio privado para organizar documentos, clientes y trabajos.',
-    resultado:
-      'Oficina digital disponible 24/7: menos papeles perdidos, más orden y mejor atención al cliente.',
-    resultadoDestacado: 'Tu estudio ordenado y online 24/7',
-    stack: ['Laravel', 'PHP', 'React'],
-    imagen: '/images/proyecto-agrimensores.png',
-    ajuste: 'cover',
-    aspecto: 'aspect-[1896/902]',
-  },
-  {
-    id: 'gestion-clubes',
-    titulo: 'Sistema de Gestión de Clubes',
-    cliente: 'Clubes deportivos y náuticos',
-    problema: 'Socios, carnets, grupos familiares y embarcaciones se llevaban en planillas sueltas.',
-    solucion:
-      'Unificé todo en un solo sistema: socios, carnets digitales, grupos familiares, embarcaciones, pagos y reportes.',
-    resultado:
-      'El club trabaja más rápido, sin errores de planillas y con la información siempre a mano.',
-    resultadoDestacado: 'Socios, carnets y embarcaciones en un lugar',
-    stack: ['Laravel', 'PHP'],
-    imagen: '/images/proyecto-clubes.jpg',
-  },
-  {
-    id: 'ifvc',
-    titulo: 'Sitio Web IFVC',
-    cliente: 'Instituto de Formación de Villa Constitución',
-    problema: 'El instituto necesitaba dar a conocer sus cursos y recibir consultas todos los días.',
-    solucion:
-      'Diseñé una página publicitaria clara, rápida y pensada para el celular, con información de cursos y contacto directo.',
-    resultado:
-      'Recibe un gran caudal de visitas diariamente y convierte esas visitas en alumnos e inscripciones.',
-    resultadoDestacado: 'Alto tráfico diario de futuros alumnos',
-    stack: ['React'],
-    imagen: '/images/proyecto-ifvc.jpg',
-  },
-  {
-    id: 'bolsa-empleo',
+    slug: 'bolsa-empleo-municipal',
     titulo: 'Bolsa de Empleo Municipal',
-    cliente: 'Municipio',
-    problema: 'Los vecinos tenían que llevar el CV en papel y anotarse en persona.',
+    cliente: 'Municipio de Villa Constitución',
+    resumen:
+      'Plataforma municipal que digitalizó la búsqueda laboral. Más de 1800 postulantes gestionados sin filas ni papeles.',
+    stack: ['Django', 'Python', 'PostgreSQL'],
+    problema:
+      'Los vecinos debían llevar el CV en papel y anotarse en persona. La gestión era manual, lenta y difícil de ordenar para el municipio.',
     solucion:
-      'Creé una plataforma online donde cada persona carga su CV una sola vez y se postula a las búsquedas con un clic. El municipio publica ofertas y gestiona todo desde un panel simple.',
-    resultado:
-      'Más de 1800 personas ya se postularon sin filas ni papeles. El municipio ahorra tiempo y tiene todo ordenado.',
-    resultadoDestacado: '+1800 usuarios que postularon',
-    stack: ['Django', 'Python'],
+      'Desarrollé una plataforma web donde cada persona carga su CV una sola vez y se postula a las búsquedas con un clic. El municipio publica ofertas y administra todo desde un panel simple.',
+    impacto:
+      'Más de 1800 personas se postularon de forma online y ordenada. El municipio ahorra tiempo operativo y tiene toda la información centralizada.',
+    metrica: '+1800 postulantes',
   },
   {
-    id: 'prode-copa',
-    titulo: 'Prode CoPA - Mundial 2026',
-    cliente: 'Colegio de Profesionales de Agrimensura (CoPA)',
-    problema: 'Querían una actividad para unir a los matriculados durante el Mundial, con premios.',
+    slug: 'club-pescadores-gestion',
+    titulo: 'Sistema de Gestión y Carnets',
+    cliente: 'Club de Pescadores',
+    resumen:
+      'Digitalización de socios, carnets y control de acceso. Toda la información del club en un solo sistema.',
+    stack: ['Laravel', 'PHP', 'MySQL'],
+    problema:
+      'Los registros de socios, carnets y grupos familiares se llevaban en planillas sueltas, con errores y sin control de acceso.',
     solucion:
-      'Desarrollé un sistema de Prode donde cada profesional carga sus pronósticos, suma puntos y participa por premios, todo automático.',
-    resultado:
-      'Participación masiva de los colegiados, con rankings en vivo y entrega de premios sin complicaciones.',
-    resultadoDestacado: 'Sistema con premios para el Mundial 2026',
-    stack: ['Laravel', 'PHP'],
+      'Unifiqué todo en un sistema a medida: socios, carnets digitales, grupos familiares, pagos y reportes desde un panel administrativo.',
+    impacto:
+      'El club eliminó las planillas manuales, agilizó la atención al socio y cuenta con información confiable siempre disponible.',
+    metrica: 'Gestión unificada',
+  },
+  {
+    slug: 'sistema-turnos-ifvc',
+    titulo: 'Sistema de Turnos IFVC',
+    cliente: 'Instituto de Formación de Villa Constitución',
+    resumen:
+      'Sistema de turnos online para la institución. Reservas ordenadas y sin gestión manual por teléfono.',
+    stack: ['Laravel', 'React', 'MySQL'],
+    problema:
+      'La asignación de turnos se hacía de forma manual, con llamadas, mensajes sueltos y superposiciones de horarios.',
+    solucion:
+      'Construí un sistema de turnos con agenda disponible online y panel administrativo para gestionar horarios, cupos y asistencias.',
+    impacto:
+      'Se eliminaron los choques de horarios y el trabajo manual repetitivo. La institución atiende de forma ordenada y previsible.',
+    metrica: 'Turnos sin fricción',
+  },
+  {
+    slug: 'pagina-institucional-ifvc',
+    titulo: 'Página Institucional IFVC',
+    cliente: 'Instituto de Formación de Villa Constitución',
+    resumen:
+      'Plataforma pública institucional. Información clara de cursos y contacto directo que convierte visitas en alumnos.',
+    stack: ['React', 'Node.js'],
+    problema:
+      'El instituto necesitaba dar a conocer sus cursos y recibir consultas todos los días desde un canal propio y confiable.',
+    solucion:
+      'Diseñé una página institucional clara, rápida y pensada para celular, con información de cursos y contacto directo.',
+    impacto:
+      'El instituto recibe visitas diarias de forma constante y convierte ese tráfico en consultas e inscripciones.',
+    metrica: 'Tráfico diario constante',
+  },
+  {
+    slug: 'sistema-gestion-vadhora',
+    titulo: 'Sistema de Gestión Vadhora',
+    cliente: 'Estudio profesional Vadhora',
+    resumen:
+      'Sistema de administración interna para el estudio. Clientes, trabajos y documentos organizados en un solo lugar.',
+    stack: ['Laravel', 'PHP', 'MySQL'],
+    problema:
+      'La administración del estudio dependía de archivos dispersos y seguimiento manual de clientes y trabajos.',
+    solucion:
+      'Desarrollé un sistema de gestión a medida con clientes, trabajos, documentos y reportes centralizados en una oficina digital.',
+    impacto:
+      'El estudio trabaja con información ordenada y disponible 24/7, con menos errores y mejor atención al cliente.',
+    metrica: 'Oficina digital 24/7',
+  },
+  {
+    slug: 'sistema-prode-copa',
+    titulo: 'Sistema Prode CoPA',
+    cliente: 'Colegio de Profesionales de Agrimensura (CoPA)',
+    resumen:
+      'Plataforma interactiva de pronósticos para el Mundial 2026. Rankings en vivo y gestión automática de premios.',
+    stack: ['Laravel', 'React', 'MySQL'],
+    problema:
+      'El colegio buscaba una actividad para unir a los matriculados durante el Mundial 2026, con premios y participación simple.',
+    solucion:
+      'Desarrollé un sistema de Prode donde cada profesional carga sus pronósticos, suma puntos y participa por premios de forma automática.',
+    impacto:
+      'Alta participación de los colegiados con rankings en vivo y entrega de premios sin carga administrativa manual.',
+    metrica: 'Mundial 2026',
   },
 ];
